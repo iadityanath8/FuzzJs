@@ -1,0 +1,23 @@
+{
+  "name": "rdomjs",
+  "version": "1.0.0",
+  "description": "",
+  "main": "m_server.js",
+  "type": "module",
+  "scripts": {
+    "run": "node m_server.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Nemesis",
+  "license": "MIT",
+  "dependencies": {
+    "@babel/cli": "^7.23.0",
+    "@babel/core": "^7.23.0",
+    "@babel/plugin-transform-react-jsx": "^7.22.15",
+    "dotenv": "^16.3.1",
+    "esm": "^3.2.25",
+    "express": "^4.18.2",
+    "jsdom": "^22.1.0",
+    "react": "^18.2.0"
+  }
+}
