@@ -22,14 +22,28 @@ export function $see(T) {
             f__vak = T;
         }
 
-        subscription.forEach((fn) => fn())
+        subscription.forEach((fn) => fn()) //slow unsafe operation
     }
 
     return [read, write];
 }
 
+// inefficeient at doing something that dom can do
+/*EXPERIMENTAL FOR NOW ONMOUNT IS ENOUGH*/async function $monitor__async(Call$Back) {
+    return () => {
+        try {
+            chek_render = true;
+            context.push(Call$Back);
+            let i = Call$Back()
+            context.pop()
+            return i;
+        } catch {
+            new Error("INFO:  Cannot call the function")
+        }
+    }
+}
 
-export function $monitor(Call$Back) {
+export function $monitor(Call$Back){
     try {
         chek_render = true;
         context.push(Call$Back);
@@ -37,22 +51,35 @@ export function $monitor(Call$Back) {
         context.pop()
         return i;
     } catch {
-        new Error("Cannot call the function")
+        new Error("INFO:  Cannot call the function")
     }
 }
 
-function check_undef(clz) {
+export function check_undef(clz) {
     if (clz === undefined) {
         return ''
     }
 }
 
-function re_render(clazz, text) {
-    if (typeof text == 'function') {
-        document.querySelector(clazz).innerText = text()
-        return;
+function re_render(clazz, _component_) {
+    // if (typeof text == 'function') {
+    //     document.querySelector(clazz).appendChild(_component_)
+    //     return;
+    // }if (typeof text == 'string'){
+    //     const create_node = document.createTextNode(_component_);
+    //     document.querySelector(clazz).appendChild(create_node)
+    // }else{
+    //     throw new Error("cannot render the DOM")
+    // }
+
+    try {
+        // document.getElementsByClassName(clazz).innerText = "Je;;p";
+        console.log(typeof _component_)
+        const c = document.createTextNode("Hello");
+        console.log(document.querySelector('.name'))   //.appendChild(c) //.appendChild(c);
+    } catch (error) {
+        console.log("ERROR: -> ", error);
     }
-    document.querySelector(clazz).innerText = text;
 }
 
 export function* loop(times, fn) {
@@ -76,6 +103,14 @@ function Router(routes) {
 
     return result;
 }
+/**
+ * Represents a book.
+ * @param {() => val} Call$Back  A callback function to be provided.
+ */
+export const onMount = async (Call$Back) => {
+    // Handling promises automatically
+
+}
 
 function Hrouter(routes) {
 
@@ -94,17 +129,17 @@ function Hrouter(routes) {
             result.appendChild(routes["/"]())
 
         }
-    else if (hash in routes) {
-        // result.innerText = ' ';
-        while (result.firstChild) {
-            result.removeChild(result.lastChild)
+        else if (hash in routes) {
+            // result.innerText = ' ';
+            while (result.firstChild) {
+                result.removeChild(result.lastChild)
+            }
+            result.appendChild(routes["/"]())
+            result.appendChild(routes[hash]())
         }
-        result.appendChild(routes["/"]())
-        result.appendChild(routes[hash]())
-    }
     }
 
     return result;
 }
 
-export default {loop, $see, $monitor};
+export default { loop, $see, $monitor, check_undef, re_render };
