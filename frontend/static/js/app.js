@@ -3,9 +3,7 @@ import {Hello} from './meow.js';
 
 
 // mainapp.SyncChanges()
-
 document.getElementById("main").appendChild(Hello());
-
 // window.onhashchange = mainapp.SyncChanges;
 
 // TODO next feature implementation is onmount 

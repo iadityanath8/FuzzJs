@@ -1,25 +1,8 @@
 import rdom from "./index.js"
-import { $see, $monitor, check_undef } from "./reactivity.js"
+import navbar from "./components/new.js"
 
-const __dfs = (ele_sr) => {
-    console.log(ele_sr)
+import { $see, $monitor, check_undef, Deffered_render, FP } from "./reactivity.js"
 
-    // console.log(ele_sr.getAttribute('__render'))
-    for (let i = 0; i < ele_sr.childNodes.length; i++) {
-
-        if (ele_sr.dataset.render) {
-            const eleclass = ele_sr.className;
-            console.log(eleclass);
-        }
-
-        __dfs(ele_sr.childNodes[i])
-    }
-}
-
-export const render_attr = () => {
-    let ele = document.querySelector(".meow");
-    __dfs(ele);
-}
 
 
 const onMount = async (call$back) => {
@@ -34,30 +17,23 @@ const onMount = async (call$back) => {
 
 // experimental and slow api is in here
 // [SLOW]
-
-export function re_render(clazz, _component_) {
-    let t = document.querySelector(".meow");
-    console.log(t)
-}
-
-
-export const Hello = () => {
+export function Hello(aa) {
     let [a, seta] = $see(0);
+    // lazy component
+    let element = () => <p class="name">hello state this is me {a().toString()}</p>;
 
-    $monitor(() => {
-        let r = document.querySelector('.meow');
-        console.log(r)
-    })
 
+    // pin points update through defering pattern 
+    Deffered_render(element)
     return (
         <div class="meow">
-            <p class="name"> Name is my  </p>
+            {element()}
 
             <div class="mo" data-render>
-                <p class='mop'>This is my nested component</p>
+                {navbar(a)}
             </div>
 
-            <button onclick={() => seta(a() + 1)}>click me</button>
+            <button onclick={() => seta(a() + 1, this)}>click me</button>
         </div>
     )
 }

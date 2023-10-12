@@ -15,13 +15,13 @@ export function $see(T) {
     }
 
 
-    const write = (T) => {
+    const write = (T, th) => {
         if (typeof T == 'function') {
             f__vak = T(f__vak);
         } else {
             f__vak = T;
         }
-
+        // console.log(th);
         subscription.forEach((fn) => fn()) //slow unsafe operation
     }
 
@@ -43,7 +43,7 @@ export function $see(T) {
     }
 }
 
-export function $monitor(Call$Back){
+export function $monitor(Call$Back) {
     try {
         chek_render = true;
         context.push(Call$Back);
@@ -61,26 +61,26 @@ export function check_undef(clz) {
     }
 }
 
-function re_render(clazz, _component_) {
-    // if (typeof text == 'function') {
-    //     document.querySelector(clazz).appendChild(_component_)
-    //     return;
-    // }if (typeof text == 'string'){
-    //     const create_node = document.createTextNode(_component_);
-    //     document.querySelector(clazz).appendChild(create_node)
-    // }else{
-    //     throw new Error("cannot render the DOM")
-    // }
+// function re_render(clazz, _component_) {
+//     // if (typeof text == 'function') {
+//     //     document.querySelector(clazz).appendChild(_component_)
+//     //     return;
+//     // }if (typeof text == 'string'){
+//     //     const create_node = document.createTextNode(_component_);
+//     //     document.querySelector(clazz).appendChild(create_node)
+//     // }else{
+//     //     throw new Error("cannot render the DOM")
+//     // }
 
-    try {
-        // document.getElementsByClassName(clazz).innerText = "Je;;p";
-        console.log(typeof _component_)
-        const c = document.createTextNode("Hello");
-        console.log(document.querySelector('.name'))   //.appendChild(c) //.appendChild(c);
-    } catch (error) {
-        console.log("ERROR: -> ", error);
-    }
-}
+//     try {
+//         // document.getElementsByClassName(clazz).innerText = "Je;;p";
+//         console.log(typeof _component_)
+//         const c = document.createTextNode("Hello");
+//         console.log(document.querySelector('.name'))   //.appendChild(c) //.appendChild(c);
+//     } catch (error) {
+//         console.log("ERROR: -> ", error);
+//     }
+// }
 
 export function* loop(times, fn) {
     if (typeof times == 'object') {
@@ -142,4 +142,51 @@ function Hrouter(routes) {
     return result;
 }
 
-export default { loop, $see, $monitor, check_undef, re_render };
+
+const __dfs = (ele_sr, element) => {
+
+    // console.log(ele_sr.getAttribute('__render'))
+    for (let i = 0; i < ele_sr.childNodes.length; i++) {
+
+        if (ele_sr.dataset.render) {
+            const eleclass = ele_sr.className;
+            re_render("." + eleclass, element)
+        }
+
+        __dfs(ele_sr.childNodes[i], element)
+    }
+}
+
+// export const render_attr = (element) => {
+//     let ele = document.querySelector(".meow");
+//     __dfs(ele, element);
+// }
+
+// export const render_attr = (a) => {
+
+// }
+
+/**
+ * 
+ * @param {Deprecated} re_render1
+ */
+// export function re_render1(clazz, _component_) {
+//     let t = document.querySelector(clazz);
+//     t.innerText = " ";
+//     t.innerText = _component_.innerText;
+// }
+
+export function re_render(_component_) {
+    let clazz = _component_.className;
+    let _t = document.querySelector("." + clazz);
+    _t.innerText = " "
+    _t.innerText = _component_.innerText;
+}
+
+export const Deffered_render = (_only_elefunc) => {
+    $monitor(() => {
+        re_render(_only_elefunc())
+    })
+}
+
+export default { loop, $see, $monitor, re_render, Deffered_render};

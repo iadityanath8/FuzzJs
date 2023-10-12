@@ -35,22 +35,8 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     }
 };
 import rdom from "./index.js";
-import { $see, $monitor } from "./reactivity.js";
-var __dfs = function (ele_sr) {
-    console.log(ele_sr);
-    // console.log(ele_sr.getAttribute('__render'))
-    for (var i = 0; i < ele_sr.childNodes.length; i++) {
-        if (ele_sr.dataset.render) {
-            var eleclass = ele_sr.className;
-            console.log(eleclass);
-        }
-        __dfs(ele_sr.childNodes[i]);
-    }
-};
-export var render_attr = function () {
-    var ele = document.querySelector(".meow");
-    __dfs(ele);
-};
+import navbar from "./components/new.js";
+import { $see, Deffered_render } from "./reactivity.js";
 var onMount = function (call$back) { return __awaiter(void 0, void 0, void 0, function () {
     return __generator(this, function (_a) {
         return [2 /*return*/, function () {
@@ -63,20 +49,18 @@ var onMount = function (call$back) { return __awaiter(void 0, void 0, void 0, fu
 // [SLOW]
 // experimental and slow api is in here
 // [SLOW]
-export function re_render(clazz, _component_) {
-    var t = document.querySelector(".meow");
-    console.log(t);
-}
-export var Hello = function () {
+export function Hello(aa) {
+    var _this = this;
     var _a = $see(0), a = _a[0], seta = _a[1];
-    $monitor(function () {
-        var r = document.querySelector('.meow');
-        console.log(r);
-    }).then(function (res) { return res(); });
+    // lazy component
+    var element = function () { return rdom.MakeElement("p", { class: "name" },
+        "hello state this is me ",
+        a().toString()); };
+    // pin points update through defering pattern 
+    Deffered_render(element);
     return (rdom.MakeElement("div", { class: "meow" },
-        rdom.MakeElement("p", { class: "name" }, " Name is my  "),
-        rdom.MakeElement("div", { class: "mo", "data-render": true },
-            rdom.MakeElement("p", { class: 'mop' }, "This is my nested component")),
-        rdom.MakeElement("button", { onclick: function () { return seta(a() + 1); } }, "click me")));
-};
+        element(),
+        rdom.MakeElement("div", { class: "mo", "data-render": true }, navbar(a)),
+        rdom.MakeElement("button", { onclick: function () { return seta(a() + 1, _this); } }, "click me")));
+}
 export default Hello;
