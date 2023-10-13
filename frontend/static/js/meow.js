@@ -36,11 +36,11 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 };
 import rdom from "./index.js";
 import navbar from "./components/new.js";
-import { $see, Deffered_render } from "./reactivity.js";
+import { $see, $monitor, record } from "./reactivity.js";
+// [SLOW]
 var onMount = function (call$back) { return __awaiter(void 0, void 0, void 0, function () {
     return __generator(this, function (_a) {
         return [2 /*return*/, function () {
-                // render_attr()
                 call$back();
             }];
     });
@@ -49,18 +49,41 @@ var onMount = function (call$back) { return __awaiter(void 0, void 0, void 0, fu
 // [SLOW]
 // experimental and slow api is in here
 // [SLOW]
-export function Hello(aa) {
-    var _this = this;
+// typeless class in here
+var RDOM_reaction_fn_table = /** @class */ (function () {
+    function RDOM_reaction_fn_table(a, b) {
+        this.a = a;
+        this.b = b;
+    }
+    return RDOM_reaction_fn_table;
+}());
+var render_once_again = function (jsx_value) {
+    // TODO   
+};
+var render_through_str_comp = function (from_vdom, from_adom) {
+};
+export var Hello = function () {
     var _a = $see(0), a = _a[0], seta = _a[1];
-    // lazy component
-    var element = function () { return rdom.MakeElement("p", { class: "name" },
-        "hello state this is me ",
-        a().toString()); };
-    // pin points update through defering pattern 
-    Deffered_render(element);
-    return (rdom.MakeElement("div", { class: "meow" },
-        element(),
-        rdom.MakeElement("div", { class: "mo", "data-render": true }, navbar(a)),
-        rdom.MakeElement("button", { onclick: function () { return seta(a() + 1, _this); } }, "click me")));
-}
+    var _b = $see(10), b = _b[0], setb = _b[1];
+    var c;
+    $monitor(function () { return c = function () { return a() * b(); }; });
+    $monitor(function () { return console.log(a(), "is", b(), c()); });
+    // render should be in here in the jsx in here
+    return ( // render
+    rdom.MakeElement("div", { class: "meow" },
+        record(function () { return rdom.MakeElement("p", { class: "name" },
+            " Hello from my wowrld in here ",
+            a().toString(),
+            " "); }),
+        rdom.MakeElement("div", { class: "don" },
+            record(function () { return rdom.MakeElement("p", { class: "dont" },
+                " Hello this is dont class in here ",
+                b().toString()); }),
+            record(function () { return rdom.MakeElement("p", { class: "normal_class" },
+                "This is the value in here ",
+                c().toString()); }),
+            navbar(a)),
+        rdom.MakeElement("button", { onclick: function () { return seta(a() + 1); } }, "click me"),
+        rdom.MakeElement("button", { onclick: function () { return setb(b() + 1); } }, "Here to increase")));
+};
 export default Hello;

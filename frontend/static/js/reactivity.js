@@ -2,6 +2,10 @@
 let context = []
 let chek_render = false;
 
+export var V_domtorender = {
+    v_vak: undefined
+};
+
 export function $see(T) {
     let f__vak = T;
     let subscription = new Set() // to avoid the duplicates thats why we are using the Set
@@ -15,7 +19,7 @@ export function $see(T) {
     }
 
 
-    const write = (T, th) => {
+    const write = (T) => {
         if (typeof T == 'function') {
             f__vak = T(f__vak);
         } else {
@@ -176,17 +180,82 @@ const __dfs = (ele_sr, element) => {
 //     t.innerText = _component_.innerText;
 // }
 
-export function re_render(_component_) {
-    let clazz = _component_.className;
-    let _t = document.querySelector("." + clazz);
-    _t.innerText = " "
-    _t.innerText = _component_.innerText;
+class Render_components__methods {
+    constructor() {
+
+    }
+
+    re_render(_component_) {
+        let clazz = _component_.className;
+        let _t = document.querySelector("." + clazz);
+        _t.innerText = " "
+        _t.innerText = _component_.innerText;
+    }
+
+    render_text(clazz, node) {
+        document.querySelector(clazz).innerText = " "; // unsafe operation incomming in here
+        document.querySelector(clazz).appendChild(node)
+    }
+
+    Render_DOm(_component_, _domnode) {
+        _domnode.appendChild(_component_)
+    }
+
+    Deffered_render(_only_elefunc) {
+        $monitor(() => {
+            this.re_render(_only_elefunc())
+        })
+    }
+
 }
 
-export const Deffered_render = (_only_elefunc) => {
-    $monitor(() => {
-        re_render(_only_elefunc())
-    })
+
+export var glob_id_index =     -1
+
+// interface DEV_type {
+//     strcontent: string
+// }
+
+let string_val /*DEV_type[]*/ = []
+
+let pata      /*DEV_type[]*/ = []
+
+
+export const record = (conVal) => {
+    glob_id_index++;
+
+    string_val.push({ strcontent: "" })
+    pata.push({ strcontent: "" })
+
+    // a little bit overhead but still super OK
+    return $monitor(() => {
+        let func_val = conVal();
+        let cls_name = func_val.className;
+        // console.log(glob_id_index)
+        // state for caching the output
+
+        // console.log("This is me in here", string_val.strcontent.join(""))
+        if (string_val[glob_id_index].strcontent.length === 0) {
+            func_val.children_text(string_val[glob_id_index]); // when rendered the component in here
+        } else if (string_val[glob_id_index].strcontent === pata[glob_id_index].strcontent) {
+            console.log("WOOOOOOOO")
+        }
+        else {
+            func_val.children_text(pata[glob_id_index]);
+            console.log(glob_id_index)
+            let op = document.createTextNode(pata[glob_id_index].strcontent);
+            Rdom_renderer.render_text("." + cls_name, op);
+            // string_val.strcontent = pata.strcontent;
+        }
+
+        return func_val
+    }
+    )
+    // render_through_str_comp(string_val, )
 }
 
-export default { loop, $see, $monitor, re_render, Deffered_render};
+
+export const Rdom_renderer = new Render_components__methods()
+Object.freeze(Rdom_renderer);
+
+export default { loop, $see, $monitor, Rdom_renderer, V_domtorender, record };

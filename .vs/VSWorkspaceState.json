@@ -1,8 +1,10 @@
 {
   "ExpandedNodes": [
     "",
-    "\\tsp"
+    "\\frontend",
+    "\\frontend\\static",
+    "\\frontend\\static\\js"
   ],
-  "SelectedNode": "\\tsp\\tsp.odin",
+  "SelectedNode": "\\frontend\\static\\js\\index.tsx",
   "PreviewInSolutionExplorer": false
 }

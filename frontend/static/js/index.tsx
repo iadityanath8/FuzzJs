@@ -1,5 +1,5 @@
 export const rdom = {
-    MakeElement(tag_name:string, props: object, ...childrens: any[]) {
+    MakeElement(tag_name, props: object, ...childrens: any[]) {
         let element = document.createElement(tag_name);
         for (let i in props) {
             const __re_patt = /^on/;
@@ -29,6 +29,11 @@ export const rdom = {
 //            element.addEventListener(t, fn);
 //            return element;
 //        }
+
+        element.children_text = (array) => {
+            array.strcontent = [...childrens].join("")
+            return element;
+        } 
 
         return element;
     }
