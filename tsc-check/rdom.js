@@ -187,38 +187,11 @@ function Hrouter(routes) {
 }
 
 // navbar component
-export const Home = () => {
-  return nav({ class: "nav" },
-    a({ href: "#/" }, "Home"),
-    a({ href: "#/about" }, "about"),
-    a({ href: "#/feedback" }, "feedback")
+export function home(){
+  return div({class:"meowclass"},"Hello world",
+   h1({},"Meow")
   )
 }
 
-export const about = () => {
-  return div({ class: "m_about" },
-    "I am about page"
-  )
-}
-
-
-export const loppo = () => {
-  return div({ class: "Thisclass" }, "loop is in here")
-}
-
-export const feedback = () => {
-  return div(
-    {},
-    ...loop(3, loppo)
-  )
-}
-
-export const mainapp = Hrouter(
-  {
-    "/": Home,
-    "/about": about,
-    "/feedback": feedback
-  }
-)
-
+export default home;
 // document.adoptedStyleSheets = [sheet];
