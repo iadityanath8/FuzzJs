@@ -3,14 +3,8 @@ import { Rdom_renderer, $monitor } from './reactivity.js';
 // import {home} from './rdom.js';
 
 
-// mainapp.SyncChanges()
-// $monitor(() => {
-//     // Removing the nodes in here
-//     document.querySelector("#main").innerHTML = " ";
-// });
-
+// Hello.SyncChanges()
 Rdom_renderer.Render_DOm(Hello(), document.getElementById("main"))
-
-// window.onhashchange = mainapp.SyncChanges;
+// window.onhashchange = Hello.SyncChanges;
 
 // TODO next feature implementation is onmount 

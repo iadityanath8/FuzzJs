@@ -13,6 +13,10 @@ export var rdom = {
         for (var _i = 2; _i < arguments.length; _i++) {
             childrens[_i - 2] = arguments[_i];
         }
+        if (typeof tag_name === 'function') {
+            console.log(tag_name);
+            return tag_name();
+        }
         var element = document.createElement(tag_name);
         for (var i in props) {
             var __re_patt = /^on/;

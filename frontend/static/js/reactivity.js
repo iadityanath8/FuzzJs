@@ -1,3 +1,4 @@
+import rdom from './index.js'
 
 let context = []
 let chek_render = false;
@@ -116,13 +117,12 @@ export const onMount = async (Call$Back) => {
 
 }
 
-function Hrouter(routes) {
+export function Hrouter(routes) {
 
-    let result = div({ class: "__router_mclass" })
+    let result = rdom.MakeElement("div", { class: "__router_mclass" });
 
     result.SyncChanges = () => {
         let hash = (window.location.hash).split("#")[1];
-        console.log(hash)
         if (hash === undefined || hash == "/") {
             // result.innerText = ''
 
@@ -131,7 +131,6 @@ function Hrouter(routes) {
             }
 
             result.appendChild(routes["/"]())
-
         }
         else if (hash in routes) {
             // result.innerText = ' ';
@@ -143,6 +142,7 @@ function Hrouter(routes) {
         }
     }
 
+    console.log("aa", result);
     return result;
 }
 
@@ -230,7 +230,8 @@ export const record = (conVal) => {
     // a little bit overhead but still super OK
     return $monitor(() => {
         let func_val = conVal();
-        let cls_name = func_val.className;
+        let cls_name = func_val.id;
+        console.log(cls_name)
         // console.log(glob_id_index)
         // state for caching the output
 
@@ -244,7 +245,7 @@ export const record = (conVal) => {
             func_val.children_text(pata[glob_id_index]);
             console.log(glob_id_index)
             let op = document.createTextNode(pata[glob_id_index].strcontent);
-            Rdom_renderer.render_text("." + cls_name, op);
+            Rdom_renderer.render_text("#" + cls_name, op);
             // string_val.strcontent = pata.strcontent;
         }
 
@@ -258,4 +259,4 @@ export const record = (conVal) => {
 export const Rdom_renderer = new Render_components__methods()
 Object.freeze(Rdom_renderer);
 
-export default { loop, $see, $monitor, Rdom_renderer, V_domtorender, record };
+export default { loop, $see, $monitor, Rdom_renderer, V_domtorender, record, Hrouter };

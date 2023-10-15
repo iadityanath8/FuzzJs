@@ -34,9 +34,17 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
         if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
     }
 };
+var __spreadArray = (this && this.__spreadArray) || function (to, from, pack) {
+    if (pack || arguments.length === 2) for (var i = 0, l = from.length, ar; i < l; i++) {
+        if (ar || !(i in from)) {
+            if (!ar) ar = Array.prototype.slice.call(from, 0, i);
+            ar[i] = from[i];
+        }
+    }
+    return to.concat(ar || Array.prototype.slice.call(from));
+};
 import rdom from "./index.js";
-import navbar from "./components/new.js";
-import { $see, $monitor, record } from "./reactivity.js";
+import Home from "./components/Home.js";
 // [SLOW]
 var onMount = function (call$back) { return __awaiter(void 0, void 0, void 0, function () {
     return __generator(this, function (_a) {
@@ -62,28 +70,12 @@ var render_once_again = function (jsx_value) {
 };
 var render_through_str_comp = function (from_vdom, from_adom) {
 };
+// export const Hello = Hrouter({
+//     "/":navbar,
+//     "/about":Home
+// })
+var i = 0;
 export var Hello = function () {
-    var _a = $see(0), a = _a[0], seta = _a[1];
-    var _b = $see(10), b = _b[0], setb = _b[1];
-    var c;
-    $monitor(function () { return c = function () { return a() * b(); }; });
-    $monitor(function () { return console.log(a(), "is", b(), c()); });
-    // render should be in here in the jsx in here
-    return ( // render
-    rdom.MakeElement("div", { class: "meow" },
-        record(function () { return rdom.MakeElement("p", { class: "name" },
-            " Hello from my wowrld in here ",
-            a().toString(),
-            " "); }),
-        rdom.MakeElement("div", { class: "don" },
-            record(function () { return rdom.MakeElement("p", { class: "dont" },
-                " Hello this is dont class in here ",
-                b().toString()); }),
-            record(function () { return rdom.MakeElement("p", { class: "normal_class" },
-                "This is the value in here ",
-                c().toString()); }),
-            navbar(a)),
-        rdom.MakeElement("button", { onclick: function () { return seta(a() + 1); } }, "click me"),
-        rdom.MakeElement("button", { onclick: function () { return setb(b() + 1); } }, "Here to increase")));
+    return (rdom.MakeElement.apply(rdom, __spreadArray(["div", null], [1, 2, 3, 4].map(function (e) { return Home(e); }), false)));
 };
 export default Hello;

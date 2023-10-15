@@ -1,10 +1,16 @@
 export const rdom = {
     MakeElement(tag_name, props: object, ...childrens: any[]) {
+        if (typeof tag_name === 'function'){
+            console.log(tag_name)
+            return tag_name();
+        }
         let element = document.createElement(tag_name);
+        
+
         for (let i in props) {
             const __re_patt = /^on/;
             const pat_test = __re_patt.test(i);
-            
+
             if (pat_test === true) {
                 const EVENT_Dispatched = i.split("on")[1].toString();
                 element.addEventListener(EVENT_Dispatched, props[i]);

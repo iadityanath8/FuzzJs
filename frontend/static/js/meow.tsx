@@ -1,9 +1,11 @@
 import rdom from "./index.js"
 import navbar from "./components/new.js"
 
-import { $see, $monitor, check_undef, FP, V_domtorender, Rdom_renderer,record } from "./reactivity.js"
-
+import { $see, $monitor, check_undef, FP, V_domtorender, Rdom_renderer, record, Hrouter } from "./reactivity.js"
+import Home from "./components/Home.js"
 // [SLOW]
+
+
 const onMount = async (call$back) => {
     return () => {
         call$back()
@@ -35,27 +37,18 @@ const render_through_str_comp = (from_vdom, from_adom) => {
 
 }
 
-export const Hello = () => {
-    let [a, seta] = $see(0);
-    let [b, setb] = $see(10);
- 
-    let c;
-    $monitor(() => c = () => a()*b())
+// export const Hello = Hrouter({
+//     "/":navbar,
+//     "/about":Home
+// })
 
-    $monitor(() => console.log(a(), "is", b(), c()));
-    // render should be in here in the jsx in here
-    return (      // render
-        <div class="meow">
-            {record(() => <p class="name"> Hello from my wowrld in here {a().toString()} </p>)}
-            <div class="don">
-                {record(() => <p class="dont"> Hello this is dont class in here {b().toString()}</p>)}
-                {record(() => <p class="normal_class">This is the value in here {c().toString()}</p>)}
-                {navbar(a)}
-            </div>
-            <button onclick={() => seta(a() + 1)}>click me</button>
-            <button onclick={() => setb(b() + 1)}>Here to increase</button>
+let i = 0;
+export const Hello = () => {
+    return (
+        <div>
+            {...[1,2,3,4].map((e) => Home(e))}
         </div>
-    )
+        )
 }
 
 export default Hello;
