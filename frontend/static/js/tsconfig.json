@@ -2,6 +2,6 @@
     "compilerOptions": {
       "jsx": "react",
       "module": "ES6",
-      "jsxFactory": "rdom.MakeElement",
+      "jsxFactory": "Fuzz.MakeElement",
     }
   }

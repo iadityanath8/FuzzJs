@@ -7,26 +7,40 @@ var __spreadArray = (this && this.__spreadArray) || function (to, from, pack) {
     }
     return to.concat(ar || Array.prototype.slice.call(from));
 };
-export var rdom = {
+export var Fuzz = {
     MakeElement: function (tag_name, props) {
         var childrens = [];
         for (var _i = 2; _i < arguments.length; _i++) {
             childrens[_i - 2] = arguments[_i];
         }
         if (typeof tag_name === 'function') {
-            console.log(tag_name);
-            return tag_name();
+            return tag_name(props);
         }
         var element = document.createElement(tag_name);
+        // NO EH
         for (var i in props) {
             var __re_patt = /^on/;
             var pat_test = __re_patt.test(i);
-            if (pat_test === true) {
-                var EVENT_Dispatched = i.split("on")[1].toString();
-                element.addEventListener(EVENT_Dispatched, props[i]);
+            if (typeof props[i] === 'object') {
+                var str_val = "";
+                for (var k in props[i]) {
+                    var split_val = k.split("_");
+                    var old_val = k;
+                    if (split_val.length > 1) {
+                        k = split_val.join("-");
+                    }
+                    str_val += k + ":" + props[i][old_val] + ";";
+                }
+                element.setAttribute(i, str_val);
             }
             else {
-                element.setAttribute(i, props[i]);
+                if (pat_test === true) {
+                    var EVENT_Dispatched = i.split("on")[1].toString();
+                    element.addEventListener(EVENT_Dispatched, props[i]);
+                }
+                else {
+                    element.setAttribute(i, props[i]);
+                }
             }
         }
         if (childrens[0] !== undefined) {
@@ -51,6 +65,12 @@ export var rdom = {
             return element;
         };
         return element;
+    },
+    StyleSheet: function (objobj) {
     }
 };
-export default rdom;
+// export const Stylesheet = {
+//     CreateSheet(objobj){s     
+//     }
+// }
+export default Fuzz;

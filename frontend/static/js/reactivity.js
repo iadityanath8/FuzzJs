@@ -1,20 +1,21 @@
-import rdom from './index.js'
+import Fuzz from './index.js'
 
-let context = []
+let context = undefined
 let chek_render = false;
 
 export var V_domtorender = {
     v_vak: undefined
 };
 
+// TODO: WORK IN PROGRESS
 export function $see(T) {
     let f__vak = T;
     let subscription = new Set() // to avoid the duplicates thats why we are using the Set
     let passer = undefined;
 
     const read = () => {
-        if (context[context.length - 1] !== undefined) {
-            subscription.add(context[context.length - 1])
+        if (context !== undefined) {
+            subscription.add(context)
         }
         return f__vak;
     }
@@ -26,7 +27,6 @@ export function $see(T) {
         } else {
             f__vak = T;
         }
-        // console.log(th);
         subscription.forEach((fn) => fn()) //slow unsafe operation
     }
 
@@ -38,9 +38,9 @@ export function $see(T) {
     return () => {
         try {
             chek_render = true;
-            context.push(Call$Back);
+            context = Call$Back;
             let i = Call$Back()
-            context.pop()
+            context = undefined;
             return i;
         } catch {
             new Error("INFO:  Cannot call the function")
@@ -51,9 +51,9 @@ export function $see(T) {
 export function $monitor(Call$Back) {
     try {
         chek_render = true;
-        context.push(Call$Back);
+        context = Call$Back;
         let i = Call$Back()
-        context.pop()
+        context = undefined;
         return i;
     } catch {
         new Error("INFO:  Cannot call the function")
@@ -112,14 +112,17 @@ function Router(routes) {
  * Represents a book.
  * @param {() => val} Call$Back  A callback function to be provided.
  */
-export const onMount = async (Call$Back) => {
-    // Handling promises automatically
 
+
+export const onMount = async (call$back) => {
+    return () => {
+        call$back()
+    }
 }
 
 export function Hrouter(routes) {
 
-    let result = rdom.MakeElement("div", { class: "__router_mclass" });
+    let result = Fuzz.MakeElement("div", { class: "__router_mclass" });
 
     result.SyncChanges = () => {
         let hash = (window.location.hash).split("#")[1];
@@ -218,7 +221,7 @@ export var glob_id_index =     -1
 
 let string_val /*DEV_type[]*/ = []
 
-let pata      /*DEV_type[]*/ = []
+let pata      /*DEV_type[]*/ =  []
 
 
 export const record = (conVal) => {
@@ -230,8 +233,8 @@ export const record = (conVal) => {
     // a little bit overhead but still super OK
     return $monitor(() => {
         let func_val = conVal();
-        let cls_name = func_val.id;
-        console.log(cls_name)
+        let cls_name = func_val.dataset.render;
+        // console.log(cls_name);
         // console.log(glob_id_index)
         // state for caching the output
 
@@ -239,15 +242,14 @@ export const record = (conVal) => {
         if (string_val[glob_id_index].strcontent.length === 0) {
             func_val.children_text(string_val[glob_id_index]); // when rendered the component in here
         } else if (string_val[glob_id_index].strcontent === pata[glob_id_index].strcontent) {
-            console.log("WOOOOOOOO")
+            // console.log("WOOOOOOOO")
         }
         else {
             func_val.children_text(pata[glob_id_index]);
-            console.log(glob_id_index)
             let op = document.createTextNode(pata[glob_id_index].strcontent);
-            Rdom_renderer.render_text("#" + cls_name, op);
-            // string_val.strcontent = pata.strcontent;
-        }
+            const t =`[data-render="${cls_name}"]`
+            Fuzz_renderer.render_text(t, op);
+         }
 
         return func_val
     }
@@ -256,7 +258,7 @@ export const record = (conVal) => {
 }
 
 
-export const Rdom_renderer = new Render_components__methods()
-Object.freeze(Rdom_renderer);
+export const Fuzz_renderer = new Render_components__methods()
+Object.freeze(Fuzz_renderer);
 
-export default { loop, $see, $monitor, Rdom_renderer, V_domtorender, record, Hrouter };
+export default { $see, $monitor, Fuzz_renderer, record, Hrouter, onMount };
