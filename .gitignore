@@ -1,4 +1,4 @@
-/node_modules
-/check_parser-deprecated
-/tsc-check
-/tsp-deprecateds
+node_modules/
+check_parser-deprecated/
+tsc-check/
+tsp-deprecateds/

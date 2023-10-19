@@ -1,4 +1,16 @@
 export const Fuzz = {
+    BuildCss(element, i, props){
+        let str_val = "";
+        for (let k in props[i]) {
+            const split_val = k.split("_");
+            const old_val = k;
+            if (split_val.length > 1) {
+                k = split_val.join("-");
+            }
+            str_val += k + ":" + props[i][old_val] + ";";
+        }
+        element.setAttribute(i, str_val)
+    },
     MakeElement(tag_name, props: object, ...childrens: any[]) {
 
         if (typeof tag_name === 'function') {
@@ -11,17 +23,21 @@ export const Fuzz = {
         for (let i in props) {
             const __re_patt = /^on/;
             const pat_test = __re_patt.test(i);
+            
             if (typeof props[i] === 'object') {
-                let str_val = "";
-                for (let k in props[i]) {
-                    const split_val = k.split("_");
-                    const old_val = k;
-                    if (split_val.length > 1) {
-                        k = split_val.join("-");
-                    }
-                    str_val += k + ":" + props[i][old_val] + ";";
-                }
-                element.setAttribute(i, str_val);
+                // Build Css
+                // let str_val = "";
+                // for (let k in props[i]) {
+                //     const split_val = k.split("_");
+                //     const old_val = k;
+                //     if (split_val.length > 1) {
+                //         k = split_val.join("-");
+                //     }
+                //     str_val += k + ":" + props[i][old_val] + ";";
+                // }
+                // element.setAttribute(i, str_val);
+                // Build Css
+                this.BuildCss(element, i, props);
             } else {
                 if (pat_test === true) {
                     const EVENT_Dispatched = i.split("on")[1].toString();

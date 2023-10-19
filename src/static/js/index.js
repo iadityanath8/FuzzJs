@@ -8,6 +8,18 @@ var __spreadArray = (this && this.__spreadArray) || function (to, from, pack) {
     return to.concat(ar || Array.prototype.slice.call(from));
 };
 export var Fuzz = {
+    BuildCss: function (element, i, props) {
+        var str_val = "";
+        for (var k in props[i]) {
+            var split_val = k.split("_");
+            var old_val = k;
+            if (split_val.length > 1) {
+                k = split_val.join("-");
+            }
+            str_val += k + ":" + props[i][old_val] + ";";
+        }
+        element.setAttribute(i, str_val);
+    },
     MakeElement: function (tag_name, props) {
         var childrens = [];
         for (var _i = 2; _i < arguments.length; _i++) {
@@ -22,16 +34,19 @@ export var Fuzz = {
             var __re_patt = /^on/;
             var pat_test = __re_patt.test(i);
             if (typeof props[i] === 'object') {
-                var str_val = "";
-                for (var k in props[i]) {
-                    var split_val = k.split("_");
-                    var old_val = k;
-                    if (split_val.length > 1) {
-                        k = split_val.join("-");
-                    }
-                    str_val += k + ":" + props[i][old_val] + ";";
-                }
-                element.setAttribute(i, str_val);
+                // Build Css
+                // let str_val = "";
+                // for (let k in props[i]) {
+                //     const split_val = k.split("_");
+                //     const old_val = k;
+                //     if (split_val.length > 1) {
+                //         k = split_val.join("-");
+                //     }
+                //     str_val += k + ":" + props[i][old_val] + ";";
+                // }
+                // element.setAttribute(i, str_val);
+                // Build Css
+                this.BuildCss(element, i, props);
             }
             else {
                 if (pat_test === true) {
