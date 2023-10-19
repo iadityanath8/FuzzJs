@@ -1,27 +1,32 @@
+import Fuzz from './index.js'
 
-let context = []
+let context = undefined
 let chek_render = false;
 
+export var V_domtorender = {
+    v_vak: undefined
+};
+
+// TODO: WORK IN PROGRESS
 export function $see(T) {
     let f__vak = T;
     let subscription = new Set() // to avoid the duplicates thats why we are using the Set
     let passer = undefined;
 
     const read = () => {
-        if (context[context.length - 1] !== undefined) {
-            subscription.add(context[context.length - 1])
+        if (context !== undefined) {
+            subscription.add(context)
         }
         return f__vak;
     }
 
 
-    const write = (T, th) => {
+    const write = (T) => {
         if (typeof T == 'function') {
             f__vak = T(f__vak);
         } else {
             f__vak = T;
         }
-        // console.log(th);
         subscription.forEach((fn) => fn()) //slow unsafe operation
     }
 
@@ -33,9 +38,9 @@ export function $see(T) {
     return () => {
         try {
             chek_render = true;
-            context.push(Call$Back);
+            context = Call$Back;
             let i = Call$Back()
-            context.pop()
+            context = undefined;
             return i;
         } catch {
             new Error("INFO:  Cannot call the function")
@@ -46,9 +51,9 @@ export function $see(T) {
 export function $monitor(Call$Back) {
     try {
         chek_render = true;
-        context.push(Call$Back);
+        context = Call$Back;
         let i = Call$Back()
-        context.pop()
+        context = undefined;
         return i;
     } catch {
         new Error("INFO:  Cannot call the function")
@@ -107,18 +112,20 @@ function Router(routes) {
  * Represents a book.
  * @param {() => val} Call$Back  A callback function to be provided.
  */
-export const onMount = async (Call$Back) => {
-    // Handling promises automatically
 
+
+export const onMount = async (call$back) => {
+    return () => {
+        call$back()
+    }
 }
 
-function Hrouter(routes) {
+export function Hrouter(routes) {
 
-    let result = div({ class: "__router_mclass" })
+    let result = Fuzz.MakeElement("div", { class: "__router_mclass" });
 
     result.SyncChanges = () => {
         let hash = (window.location.hash).split("#")[1];
-        console.log(hash)
         if (hash === undefined || hash == "/") {
             // result.innerText = ''
 
@@ -127,7 +134,6 @@ function Hrouter(routes) {
             }
 
             result.appendChild(routes["/"]())
-
         }
         else if (hash in routes) {
             // result.innerText = ' ';
@@ -139,6 +145,7 @@ function Hrouter(routes) {
         }
     }
 
+    console.log("aa", result);
     return result;
 }
 
@@ -176,17 +183,82 @@ const __dfs = (ele_sr, element) => {
 //     t.innerText = _component_.innerText;
 // }
 
-export function re_render(_component_) {
-    let clazz = _component_.className;
-    let _t = document.querySelector("." + clazz);
-    _t.innerText = " "
-    _t.innerText = _component_.innerText;
+class Render_components__methods {
+    constructor() {
+
+    }
+
+    re_render(_component_) {
+        let clazz = _component_.className;
+        let _t = document.querySelector("." + clazz);
+        _t.innerText = " "
+        _t.innerText = _component_.innerText;
+    }
+
+    render_text(clazz, node) {
+        document.querySelector(clazz).innerText = " "; // unsafe operation incomming in here
+        document.querySelector(clazz).appendChild(node)
+    }
+
+    Render_DOm(_component_, _domnode) {
+        _domnode.appendChild(_component_)
+    }
+
+    Deffered_render(_only_elefunc) {
+        $monitor(() => {
+            this.re_render(_only_elefunc())
+        })
+    }
+
 }
 
-export const Deffered_render = (_only_elefunc) => {
-    $monitor(() => {
-        re_render(_only_elefunc())
-    })
+
+export var glob_id_index =     -1
+
+// interface DEV_type {
+//     strcontent: string
+// }
+
+let string_val /*DEV_type[]*/ = []
+
+let pata      /*DEV_type[]*/ =  []
+
+
+export const record = (conVal) => {
+    glob_id_index++;
+
+    string_val.push({ strcontent: "" })
+    pata.push({ strcontent: "" })
+
+    // a little bit overhead but still super OK
+    return $monitor(() => {
+        let func_val = conVal();
+        let cls_name = func_val.dataset.render;
+        // console.log(cls_name);
+        // console.log(glob_id_index)
+        // state for caching the output
+
+        // console.log("This is me in here", string_val.strcontent.join(""))
+        if (string_val[glob_id_index].strcontent.length === 0) {
+            func_val.children_text(string_val[glob_id_index]); // when rendered the component in here
+        } else if (string_val[glob_id_index].strcontent === pata[glob_id_index].strcontent) {
+            // console.log("WOOOOOOOO")
+        }
+        else {
+            func_val.children_text(pata[glob_id_index]);
+            let op = document.createTextNode(pata[glob_id_index].strcontent);
+            const t =`[data-render="${cls_name}"]`
+            Fuzz_renderer.render_text(t, op);
+         }
+
+        return func_val
+    }
+    )
+    // render_through_str_comp(string_val, )
 }
 
-export default { loop, $see, $monitor, re_render, Deffered_render};
+
+export const Fuzz_renderer = new Render_components__methods()
+Object.freeze(Fuzz_renderer);
+
+export default { $see, $monitor, Fuzz_renderer, record, Hrouter, onMount };

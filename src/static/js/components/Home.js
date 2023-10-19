@@ -34,33 +34,26 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
         if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
     }
 };
-import rdom from "./index.js";
-import navbar from "./components/new.js";
-import { $see, Deffered_render } from "./reactivity.js";
-var onMount = function (call$back) { return __awaiter(void 0, void 0, void 0, function () {
-    return __generator(this, function (_a) {
-        return [2 /*return*/, function () {
-                // render_attr()
-                call$back();
-            }];
+import Fuzz from "../index.js";
+// DEP NEXT WORK LATER
+function loadassest() {
+    return __awaiter(this, void 0, void 0, function () {
+        var response, images;
+        return __generator(this, function (_a) {
+            switch (_a.label) {
+                case 0: return [4 /*yield*/, fetch('/static/js/css/main.css')];
+                case 1:
+                    response = _a.sent();
+                    return [4 /*yield*/, response.text()];
+                case 2:
+                    images = _a.sent();
+                    return [2 /*return*/];
+            }
+        });
     });
-}); };
-// depth first search for element find for _render tag in here
-// [SLOW]
-// experimental and slow api is in here
-// [SLOW]
-export function Hello(aa) {
-    var _this = this;
-    var _a = $see(0), a = _a[0], seta = _a[1];
-    // lazy component
-    var element = function () { return rdom.MakeElement("p", { class: "name" },
-        "hello state this is me ",
-        a().toString()); };
-    // pin points update through defering pattern 
-    Deffered_render(element);
-    return (rdom.MakeElement("div", { class: "meow" },
-        element(),
-        rdom.MakeElement("div", { class: "mo", "data-render": true }, navbar(a)),
-        rdom.MakeElement("button", { onclick: function () { return seta(a() + 1, _this); } }, "click me")));
 }
-export default Hello;
+export var Home = function () {
+    return (Fuzz.MakeElement("div", { style: { display: "flex", justify_content: "center", align_items: "center", height: "100vh" } },
+        Fuzz.MakeElement("p", { class: "This" }, "Hello world from my home in here")));
+};
+export default Home;
