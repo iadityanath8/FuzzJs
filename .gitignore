@@ -1,1 +1,4 @@
 node_modules/
+check_parser-deprecated/
+tsp-deprecated/
+tsc-check/
