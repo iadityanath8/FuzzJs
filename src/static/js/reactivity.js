@@ -97,6 +97,10 @@ export function* loop(times, fn) {
     }
 }
 
+
+/**
+ *  @deprecated Soon Router will be erdicated soon with the implmenttion of Browser Router till then use Hash Router instead
+ */
 function Router(routes) {
     // let result = div();
 
@@ -108,18 +112,27 @@ function Router(routes) {
 
     return result;
 }
+
+
 /**
  * Represents a book.
+ * onMunt is a async function which sees for if the html has loaded into the dom an dthen rerun the closure
  * @param {() => val} Call$Back  A callback function to be provided.
  */
-
-
 export const onMount = async (call$back) => {
     return () => {
         call$back()
     }
 }
 
+
+/**
+ * A basic Hash router implementation. 
+ * Upcomming will be a Browser router for handling querty params 
+ * 
+ * @param {object} routes 
+ * @returns {object} where object -> HtmlElement + my version in to it.
+ */
 export function Hrouter(routes) {
 
     let result = Fuzz.MakeElement("div", { class: "__router_mclass" });
@@ -213,50 +226,65 @@ class Render_components__methods {
 }
 
 
-export var glob_id_index =     -1
 
 // interface DEV_type {
 //     strcontent: string
 // }
 
+
+
 let string_val /*DEV_type[]*/ = []
-
-let pata      /*DEV_type[]*/ =  []
-
+let pata      /*DEV_type[]*/ = []
+var glob_id_index /*Number*/ = -1
 
 export const record = (conVal) => {
-    glob_id_index++;
 
+
+    glob_id_index++;
     string_val.push({ strcontent: "" })
     pata.push({ strcontent: "" })
+    let hm = new Map();
 
     // a little bit overhead but still super OK
-    return $monitor(() => {
-        let func_val = conVal();
-        let cls_name = func_val.dataset.render;
-        // console.log(cls_name);
-        // console.log(glob_id_index)
-        // state for caching the output
+    try {
+        return $monitor(() => {
+            let func_val = conVal();
 
-        // console.log("This is me in here", string_val.strcontent.join(""))
-        if (string_val[glob_id_index].strcontent.length === 0) {
-            func_val.children_text(string_val[glob_id_index]); // when rendered the component in here
-        } else if (string_val[glob_id_index].strcontent === pata[glob_id_index].strcontent) {
-            // console.log("WOOOOOOOO")
+            var common_state = glob_id_index;
+            const cls_name = func_val.dataset.render;
+
+            if (hm.has(cls_name) === false) {
+                hm.set(cls_name, common_state);
+            }
+
+            // console.log(cls_name);
+            // console.log(glob_id_index)
+            // state for caching the output
+            // console.log("This is me in here", string_val.strcontent.join(""))
+            if (string_val[hm.get(cls_name)].strcontent.length === 0) {
+                func_val.children_text(string_val[hm.get(cls_name)]); // when rendered the component in here
+            } else if (string_val[hm.get(cls_name)].strcontent === pata[hm.get(cls_name)].strcontent) {
+                // console.log("WOOOOOOOO")
+            }
+            else {
+                // console.log(glob_id_index)
+                func_val.children_text(pata[hm.get(cls_name)]);
+                let op = document.createTextNode(pata[hm.get(cls_name)].strcontent);
+                const t = `[data-render="${cls_name}"]`
+                Fuzz_renderer.render_text(t, op);
+
+                // console.log("old-value",string_val[1].strcontent, "The glob", glob_id_index)
+                // console.log("new_value",pata[1].strcontent, "The glob", glob_id_index)
+            }
+
+            return func_val
         }
-        else {
-            func_val.children_text(pata[glob_id_index]);
-            let op = document.createTextNode(pata[glob_id_index].strcontent);
-            const t =`[data-render="${cls_name}"]`
-            Fuzz_renderer.render_text(t, op);
-         }
-
-        return func_val
+        )
+    } catch (err) {
+        console.log(err)
     }
-    )
     // render_through_str_comp(string_val, )
 }
-
 
 export const Fuzz_renderer = new Render_components__methods()
 Object.freeze(Fuzz_renderer);

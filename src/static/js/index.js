@@ -7,8 +7,10 @@ var __spreadArray = (this && this.__spreadArray) || function (to, from, pack) {
     }
     return to.concat(ar || Array.prototype.slice.call(from));
 };
-export var Fuzz = {
-    BuildCss: function (element, i, props) {
+var Fuzz = /** @class */ (function () {
+    function Fuzz() {
+    }
+    Fuzz.BuildCss = function (element, i, props) {
         var str_val = "";
         for (var k in props[i]) {
             var split_val = k.split("_");
@@ -19,8 +21,8 @@ export var Fuzz = {
             str_val += k + ":" + props[i][old_val] + ";";
         }
         element.setAttribute(i, str_val);
-    },
-    MakeElement: function (tag_name, props) {
+    };
+    Fuzz.MakeElement = function (tag_name, props) {
         var childrens = [];
         for (var _i = 2; _i < arguments.length; _i++) {
             childrens[_i - 2] = arguments[_i];
@@ -80,12 +82,34 @@ export var Fuzz = {
             return element;
         };
         return element;
-    },
-    StyleSheet: function (objobj) {
-    }
-};
+    };
+    // Needs a testing 
+    Fuzz.BuildCss_from_file = function (str) {
+        var element = document.getElementsByTagName('style');
+        if (element.length == 0) {
+            var ple = document.createElement('style');
+            ple.innerHTML = str;
+            document.body.appendChild(ple);
+        }
+        else {
+            var __textval = document.createTextNode(str);
+            element.item(0).appendChild(__textval);
+        }
+    };
+    // DEP NEXT WORK LATER
+    Fuzz.Loadassest = function (path_to_css) {
+        var _this = this;
+        fetch(path_to_css).then(function (res) { return res.text(); }).then(function (_y) {
+            _this.BuildCss_from_file(_y);
+        });
+    };
+    return Fuzz;
+}());
+export { Fuzz };
 // export const Stylesheet = {
 //     CreateSheet(objobj){s     
 //     }
 // }
+// export const Fuzz = new __Fuzz_internals();
+// Object.freeze(Fuzz)
 export default Fuzz;

@@ -1,5 +1,9 @@
-export const Fuzz = {
-    BuildCss(element, i, props){
+export class Fuzz {
+    constructor() {
+
+    }
+
+    private static BuildCss(element, i, props) {
         let str_val = "";
         for (let k in props[i]) {
             const split_val = k.split("_");
@@ -10,8 +14,9 @@ export const Fuzz = {
             str_val += k + ":" + props[i][old_val] + ";";
         }
         element.setAttribute(i, str_val)
-    },
-    MakeElement(tag_name, props: object, ...childrens: any[]) {
+    }
+
+    public static MakeElement(tag_name, props: object, ...childrens: any[]) {
 
         if (typeof tag_name === 'function') {
             return tag_name(props);
@@ -23,7 +28,7 @@ export const Fuzz = {
         for (let i in props) {
             const __re_patt = /^on/;
             const pat_test = __re_patt.test(i);
-            
+
             if (typeof props[i] === 'object') {
                 // Build Css
                 // let str_val = "";
@@ -72,17 +77,38 @@ export const Fuzz = {
         }
 
         return element;
-    },
-
-    StyleSheet(objobj){
-        
     }
 
+
+    // Needs a testing 
+    public static BuildCss_from_file(str) {
+        let element = document.getElementsByTagName('style');
+        if (element.length == 0) {
+            let ple = document.createElement('style');
+            ple.innerHTML = str;
+            document.body.appendChild(ple);
+        } else {
+            let __textval = document.createTextNode(str)
+            element.item(0).appendChild(__textval);
+        }
+    }
+
+    // DEP NEXT WORK LATER
+    public static Loadassest(path_to_css: string) {
+        fetch(path_to_css).then((res) => res.text()).then((_y) => {
+            this.BuildCss_from_file(_y);
+        }
+        );
+    }
 }
 
 // export const Stylesheet = {
 //     CreateSheet(objobj){s     
 //     }
 // }
+
+// export const Fuzz = new __Fuzz_internals();
+
+// Object.freeze(Fuzz)
 
 export default Fuzz;
