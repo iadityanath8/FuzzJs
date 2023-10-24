@@ -60,6 +60,12 @@ export function $monitor(Call$Back) {
     }
 }
 
+export function $Memo(fn) {
+    const [s, set] = $see();
+    $monitor(() => set(fn()));
+    return s;
+}
+
 export function check_undef(clz) {
     if (clz === undefined) {
         return ''
@@ -97,6 +103,10 @@ export function* loop(times, fn) {
     }
 }
 
+
+/**
+ *  @deprecated Soon Router will be erdicated soon with the implmenttion of Browser Router till then use Hash Router instead
+ */
 function Router(routes) {
     // let result = div();
 
@@ -108,18 +118,27 @@ function Router(routes) {
 
     return result;
 }
+
+
 /**
  * Represents a book.
+ * onMunt is a async function which sees for if the html has loaded into the dom an dthen rerun the closure
  * @param {() => val} Call$Back  A callback function to be provided.
  */
-
-
 export const onMount = async (call$back) => {
     return () => {
         call$back()
     }
 }
 
+
+/**
+ * A basic Hash router implementation. 
+ * Upcomming will be a Browser router for handling querty params 
+ * 
+ * @param {object} routes 
+ * @returns {object} where object -> HtmlElement + my version in to it.
+ */
 export function Hrouter(routes) {
 
     let result = Fuzz.MakeElement("div", { class: "__router_mclass" });
@@ -140,12 +159,13 @@ export function Hrouter(routes) {
             while (result.firstChild) {
                 result.removeChild(result.lastChild)
             }
+            // console.log(routes["/"]())
             result.appendChild(routes["/"]())
             result.appendChild(routes[hash]())
         }
     }
 
-    console.log("aa", result);
+    // console.log("aa", result);
     return result;
 }
 
@@ -189,15 +209,16 @@ class Render_components__methods {
     }
 
     re_render(_component_) {
+        console.log(_component_)
         let clazz = _component_.className;
         let _t = document.querySelector("." + clazz);
-        _t.innerText = " "
-        _t.innerText = _component_.innerText;
+        _t.innertext = " "
+        _t.innerHTML = _component_.innertext;
     }
 
     render_text(clazz, node) {
-        document.querySelector(clazz).innerText = " "; // unsafe operation incomming in here
-        document.querySelector(clazz).appendChild(node)
+        document.querySelector(clazz).innerHTML = node; // unsafe operation incomming in here
+        // document.querySelector(clazz).appendChild(node)
     }
 
     Render_DOm(_component_, _domnode) {
@@ -213,47 +234,61 @@ class Render_components__methods {
 }
 
 
-export var glob_id_index =     -1
 
 // interface DEV_type {
 //     strcontent: string
 // }
 
+
 let string_val /*DEV_type[]*/ = []
+let pata      /*DEV_type[]*/ = []
+var glob_id_index /*Number*/ = -1
 
-let pata      /*DEV_type[]*/ =  []
-
+let main_cache = {}       // object should be enough rather than calling a function in here
+/** 
+ * The main focus for the next opening of the project will be the rendering and most on the improvement of the record function 
+ * the record function is the main backbone of rendering that happens in the FuzzJs also improvement like "no need of data-render attribute", "avoid extra rendering work ", "and improvement of signa functions such as $see and $monitor"
+*/
 
 export const record = (conVal) => {
     glob_id_index++;
-
     string_val.push({ strcontent: "" })
     pata.push({ strcontent: "" })
+    let hm = new Map();
 
     // a little bit overhead but still super OK
-    return $monitor(() => {
-        let func_val = conVal();
-        let cls_name = func_val.dataset.render;
-        // console.log(cls_name);
-        // console.log(glob_id_index)
-        // state for caching the output
+    try {
+        return $monitor(() => {
+            let func_val = conVal();
 
-        // console.log("This is me in here", string_val.strcontent.join(""))
-        if (string_val[glob_id_index].strcontent.length === 0) {
-            func_val.children_text(string_val[glob_id_index]); // when rendered the component in here
-        } else if (string_val[glob_id_index].strcontent === pata[glob_id_index].strcontent) {
-            // console.log("WOOOOOOOO")
+            var common_state = glob_id_index;
+            const cls_name = func_val.dataset.render;
+
+            if (hm.has(cls_name) === false) {
+                hm.set(cls_name, common_state);
+            }
+
+            // console.log(func_val)
+            // state for caching the output
+            // console.log("This is me in here", string_val.strcontent.join(""))
+            if (string_val[hm.get(cls_name)].strcontent.length === 0) {
+                func_val.children_text(string_val[hm.get(cls_name)]); // when rendered the component in here
+            }
+            else {
+                func_val.children_text(pata[hm.get(cls_name)]);
+                let op = document.createTextNode(pata[hm.get(cls_name)].strcontent);
+                // console.log(pata[hm.get(cls_name)].strcontent)
+                const t = `[data-render="${cls_name}"]`   
+                console.log(t)
+                Fuzz_renderer.render_text(t, pata[hm.get(cls_name)].strcontent);
+            }
+
+            return func_val
         }
-        else {
-            func_val.children_text(pata[glob_id_index]);
-            let op = document.createTextNode(pata[glob_id_index].strcontent);
-            const t =`[data-render="${cls_name}"]`
-            Fuzz_renderer.render_text(t, op);
-         }
-
-        return func_val
+        )
+    } catch (err) {
+        console.log(err)
     }
-    )
     // render_through_str_comp(string_val, )
 }
 
@@ -261,4 +296,4 @@ export const record = (conVal) => {
 export const Fuzz_renderer = new Render_components__methods()
 Object.freeze(Fuzz_renderer);
 
-export default { $see, $monitor, Fuzz_renderer, record, Hrouter, onMount };
+export default { $see, $monitor, Fuzz_renderer, record, Hrouter, onMount, $Memo};
