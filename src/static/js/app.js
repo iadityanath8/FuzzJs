@@ -1,8 +1,8 @@
-import { Hello } from './meow.js';
+import Homeroute from './Homeroute.js'
 import { Fuzz_renderer, $monitor } from './reactivity.js';
 
 
-// Hello.SyncChanges()
-Fuzz_renderer.Render_DOm(Hello(), document.getElementById("main"))
-// window.onhashchange = Hello.SyncChanges;
+Homeroute.SyncChanges()
+Fuzz_renderer.Render_DOm(Homeroute, document.getElementById("main"))
+window.onhashchange = Homeroute.SyncChanges;
 // TODO next feature implementation is onmount 

@@ -3,6 +3,8 @@ export class Fuzz {
 
     }
 
+    private static jtoString = obj => Object.entries(obj).map(([k, v]) => `${k}: ${v}`).join(', ');
+
     private static BuildCss(element, i, props) {
         let str_val = "";
         for (let k in props[i]) {
@@ -19,6 +21,7 @@ export class Fuzz {
     public static MakeElement(tag_name, props: object, ...childrens: any[]) {
 
         if (typeof tag_name === 'function') {
+            console.log(childrens)
             return tag_name(props);
         }
 
@@ -70,10 +73,18 @@ export class Fuzz {
         //            element.addEventListener(t, fn);
         //            return element;
         //        }
-
         element.children_text = (array) => {
-            array.strcontent = [...childrens].join("")
-            return element;
+            if (typeof childrens[0] === 'string' || typeof childrens === 'string') {
+                array.strcontent = [...childrens].join("")
+                return element;
+            }
+            else if (typeof childrens === 'object') {
+                array.strcontent = ""
+                for (const i in childrens) {
+                    array.strcontent += childrens[i].outerHTML
+                }
+                return element;
+            }
         }
 
         return element;
@@ -81,7 +92,7 @@ export class Fuzz {
 
 
     // Needs a testing 
-    public static BuildCss_from_file(str) {
+    private static BuildCss_from_file(str) {
         let element = document.getElementsByTagName('style');
         if (element.length == 0) {
             let ple = document.createElement('style');
@@ -99,6 +110,9 @@ export class Fuzz {
             this.BuildCss_from_file(_y);
         }
         );
+    }
+    public static range(startAt = 0, size) {
+        return Array.from(new Array(size), (x, i) => i);
     }
 }
 

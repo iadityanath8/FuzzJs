@@ -1,37 +1,44 @@
 import Fuzz from "../index.js";
 import { $see, $monitor } from '../reactivity.js'
 
-let ss = {
-    fcs: {
-        display: "flex",
-        justify_content: "center",
-        align_items: "center",
-        height: "100vh"
+const stylesheet = {
+    sep: {
+        margin_bottom: "2em"
     },
-    thisc: {
-
-        color: "violet"
-    },
-
-    ffc: {
-        width: "331px",
-        height: "361px"
-    }
 }
 
-
-Fuzz.Loadassest("/static/js/components/test.css")
 export const Home = () => {
     return (
-        <div>
-            <div style={ss.fcs}>
-                <p class="This">
-                    <img src="/static/js/components/jebaited.jpg" alt="" style={ss.ffc}/>
-                    Hello world from my home in here
-                </p>
-            </div>
-        </div>
-    )
+            <nav class="navbar navbar-expand-lg navbar-light bg-light" style={stylesheet.sep}>
+                <div class="container-fluid">
+                    <a class="navbar-brand" href="#/">Navbar</a>
+                    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                        <span class="navbar-toggler-icon"></span>
+                    </button>
+                    <div class="collapse navbar-collapse" id="navbarNav">
+
+                        <ul class="navbar-nav">
+                            <li class="nav-item">
+                                <a class="nav-link active" aria-current="page" href="#/">Home</a>
+                            </li>
+
+                            <li class="nav-item">
+                                <a class="nav-link active" href="#/Counter">Counter</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="#/nav">Go to search</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="#/Shop">Shop</a>
+                            </li>
+
+                        </ul>
+                    </div>
+                </div>
+            </nav>
+
+            // <p>Down in here</p>
+     )
 }
 
 export default Home;

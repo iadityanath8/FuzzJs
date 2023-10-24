@@ -60,6 +60,12 @@ export function $monitor(Call$Back) {
     }
 }
 
+export function $Memo(fn) {
+    const [s, set] = $see();
+    $monitor(() => set(fn()));
+    return s;
+}
+
 export function check_undef(clz) {
     if (clz === undefined) {
         return ''
@@ -153,12 +159,13 @@ export function Hrouter(routes) {
             while (result.firstChild) {
                 result.removeChild(result.lastChild)
             }
+            // console.log(routes["/"]())
             result.appendChild(routes["/"]())
             result.appendChild(routes[hash]())
         }
     }
 
-    console.log("aa", result);
+    // console.log("aa", result);
     return result;
 }
 
@@ -202,15 +209,16 @@ class Render_components__methods {
     }
 
     re_render(_component_) {
+        console.log(_component_)
         let clazz = _component_.className;
         let _t = document.querySelector("." + clazz);
-        _t.innerText = " "
-        _t.innerText = _component_.innerText;
+        _t.innertext = " "
+        _t.innerHTML = _component_.innertext;
     }
 
     render_text(clazz, node) {
-        document.querySelector(clazz).innerText = " "; // unsafe operation incomming in here
-        document.querySelector(clazz).appendChild(node)
+        document.querySelector(clazz).innerHTML = node; // unsafe operation incomming in here
+        // document.querySelector(clazz).appendChild(node)
     }
 
     Render_DOm(_component_, _domnode) {
@@ -232,14 +240,17 @@ class Render_components__methods {
 // }
 
 
-
 let string_val /*DEV_type[]*/ = []
 let pata      /*DEV_type[]*/ = []
 var glob_id_index /*Number*/ = -1
 
+let main_cache = {}       // object should be enough rather than calling a function in here
+/** 
+ * The main focus for the next opening of the project will be the rendering and most on the improvement of the record function 
+ * the record function is the main backbone of rendering that happens in the FuzzJs also improvement like "no need of data-render attribute", "avoid extra rendering work ", "and improvement of signa functions such as $see and $monitor"
+*/
+
 export const record = (conVal) => {
-
-
     glob_id_index++;
     string_val.push({ strcontent: "" })
     pata.push({ strcontent: "" })
@@ -257,24 +268,19 @@ export const record = (conVal) => {
                 hm.set(cls_name, common_state);
             }
 
-            // console.log(cls_name);
-            // console.log(glob_id_index)
+            // console.log(func_val)
             // state for caching the output
             // console.log("This is me in here", string_val.strcontent.join(""))
             if (string_val[hm.get(cls_name)].strcontent.length === 0) {
                 func_val.children_text(string_val[hm.get(cls_name)]); // when rendered the component in here
-            } else if (string_val[hm.get(cls_name)].strcontent === pata[hm.get(cls_name)].strcontent) {
-                // console.log("WOOOOOOOO")
             }
             else {
-                // console.log(glob_id_index)
                 func_val.children_text(pata[hm.get(cls_name)]);
                 let op = document.createTextNode(pata[hm.get(cls_name)].strcontent);
-                const t = `[data-render="${cls_name}"]`
-                Fuzz_renderer.render_text(t, op);
-
-                // console.log("old-value",string_val[1].strcontent, "The glob", glob_id_index)
-                // console.log("new_value",pata[1].strcontent, "The glob", glob_id_index)
+                // console.log(pata[hm.get(cls_name)].strcontent)
+                const t = `[data-render="${cls_name}"]`   
+                console.log(t)
+                Fuzz_renderer.render_text(t, pata[hm.get(cls_name)].strcontent);
             }
 
             return func_val
@@ -286,7 +292,8 @@ export const record = (conVal) => {
     // render_through_str_comp(string_val, )
 }
 
+
 export const Fuzz_renderer = new Render_components__methods()
 Object.freeze(Fuzz_renderer);
 
-export default { $see, $monitor, Fuzz_renderer, record, Hrouter, onMount };
+export default { $see, $monitor, Fuzz_renderer, record, Hrouter, onMount, $Memo};

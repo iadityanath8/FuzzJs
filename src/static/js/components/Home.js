@@ -1,25 +1,26 @@
 import Fuzz from "../index.js";
-var ss = {
-    fcs: {
-        display: "flex",
-        justify_content: "center",
-        align_items: "center",
-        height: "100vh"
+var stylesheet = {
+    sep: {
+        margin_bottom: "2em"
     },
-    thisc: {
-        color: "violet"
-    },
-    ffc: {
-        width: "331px",
-        height: "361px"
-    }
 };
-Fuzz.Loadassest("/static/js/components/test.css");
 export var Home = function () {
-    return (Fuzz.MakeElement("div", null,
-        Fuzz.MakeElement("div", { style: ss.fcs },
-            Fuzz.MakeElement("p", { class: "This" },
-                Fuzz.MakeElement("img", { src: "/static/js/components/jebaited.jpg", alt: "", style: ss.ffc }),
-                "Hello world from my home in here"))));
+    return (Fuzz.MakeElement("nav", { class: "navbar navbar-expand-lg navbar-light bg-light", style: stylesheet.sep },
+        Fuzz.MakeElement("div", { class: "container-fluid" },
+            Fuzz.MakeElement("a", { class: "navbar-brand", href: "#/" }, "Navbar"),
+            Fuzz.MakeElement("button", { class: "navbar-toggler", type: "button", "data-bs-toggle": "collapse", "data-bs-target": "#navbarNav", "aria-controls": "navbarNav", "aria-expanded": "false", "aria-label": "Toggle navigation" },
+                Fuzz.MakeElement("span", { class: "navbar-toggler-icon" })),
+            Fuzz.MakeElement("div", { class: "collapse navbar-collapse", id: "navbarNav" },
+                Fuzz.MakeElement("ul", { class: "navbar-nav" },
+                    Fuzz.MakeElement("li", { class: "nav-item" },
+                        Fuzz.MakeElement("a", { class: "nav-link active", "aria-current": "page", href: "#/" }, "Home")),
+                    Fuzz.MakeElement("li", { class: "nav-item" },
+                        Fuzz.MakeElement("a", { class: "nav-link active", href: "#/Counter" }, "Counter")),
+                    Fuzz.MakeElement("li", { class: "nav-item" },
+                        Fuzz.MakeElement("a", { class: "nav-link", href: "#/nav" }, "Go to search")),
+                    Fuzz.MakeElement("li", { class: "nav-item" },
+                        Fuzz.MakeElement("a", { class: "nav-link", href: "#/Shop" }, "Shop"))))))
+    // <p>Down in here</p>
+    );
 };
 export default Home;

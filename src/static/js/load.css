@@ -1,7 +1,0 @@
-.load{
-    display: flex;
-    flex-direction: row-reverse;
-    justify-content: center;
-    gap: 1em;
-    margin-top: 1em;
-}

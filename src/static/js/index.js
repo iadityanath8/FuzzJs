@@ -28,6 +28,7 @@ var Fuzz = /** @class */ (function () {
             childrens[_i - 2] = arguments[_i];
         }
         if (typeof tag_name === 'function') {
+            console.log(childrens);
             return tag_name(props);
         }
         var element = document.createElement(tag_name);
@@ -78,8 +79,17 @@ var Fuzz = /** @class */ (function () {
         //            return element;
         //        }
         element.children_text = function (array) {
-            array.strcontent = __spreadArray([], childrens, true).join("");
-            return element;
+            if (typeof childrens[0] === 'string' || typeof childrens === 'string') {
+                array.strcontent = __spreadArray([], childrens, true).join("");
+                return element;
+            }
+            else if (typeof childrens === 'object') {
+                array.strcontent = "";
+                for (var i in childrens) {
+                    array.strcontent += childrens[i].outerHTML;
+                }
+                return element;
+            }
         };
         return element;
     };
@@ -103,6 +113,14 @@ var Fuzz = /** @class */ (function () {
             _this.BuildCss_from_file(_y);
         });
     };
+    Fuzz.range = function (startAt, size) {
+        if (startAt === void 0) { startAt = 0; }
+        return Array.from(new Array(size), function (x, i) { return i; });
+    };
+    Fuzz.jtoString = function (obj) { return Object.entries(obj).map(function (_a) {
+        var k = _a[0], v = _a[1];
+        return "".concat(k, ": ").concat(v);
+    }).join(', '); };
     return Fuzz;
 }());
 export { Fuzz };
