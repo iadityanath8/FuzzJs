@@ -250,6 +250,7 @@ let main_cache = {}       // object should be enough rather than calling a funct
  * the record function is the main backbone of rendering that happens in the FuzzJs also improvement like "no need of data-render attribute", "avoid extra rendering work ", "and improvement of signa functions such as $see and $monitor"
 */
 
+
 export const record = (conVal) => {
     glob_id_index++;
     string_val.push({ strcontent: "" })
@@ -267,21 +268,47 @@ export const record = (conVal) => {
             if (hm.has(cls_name) === false) {
                 hm.set(cls_name, common_state);
             }
+            // func_val.children_text(string_val[hm.get(cls_name)]);
 
-            // console.log(func_val)
-            // state for caching the output
+            const t = `[data-render="${cls_name}"]`
+            const r = document.querySelector(t);
+
+            if (r == null) {
+                string_val[hm.get(cls_name)].strcontent = ""
+            } else {
+                string_val[hm.get(cls_name)].strcontent = r.textContent;
+                func_val.children_text(pata[hm.get(cls_name)])
+                if (string_val[hm.get(cls_name)].strcontent === pata[hm.get(cls_name)].strcontent) {
+                    
+                }else{
+                    Fuzz_renderer.render_text(t, pata[hm.get(cls_name)].strcontent);
+                    console.log(string_val, pata);
+                }
+            }
+            // string_val[hm.get(cls_name)].strcontent =
+            // let a =  document.querySelector(t).textContent
+
+            // console.log(a);
+
+            // func_val.children_text(pata[hm.get(cls_name)]);
+
+            // console.log("a",string_val);
+            // console.log("b", pata)
+
+            // deprecated ------------------- 
             // console.log("This is me in here", string_val.strcontent.join(""))
-            if (string_val[hm.get(cls_name)].strcontent.length === 0) {
-                func_val.children_text(string_val[hm.get(cls_name)]); // when rendered the component in here
-            }
-            else {
-                func_val.children_text(pata[hm.get(cls_name)]);
-                let op = document.createTextNode(pata[hm.get(cls_name)].strcontent);
-                // console.log(pata[hm.get(cls_name)].strcontent)
-                const t = `[data-render="${cls_name}"]`   
-                console.log(t)
-                Fuzz_renderer.render_text(t, pata[hm.get(cls_name)].strcontent);
-            }
+            // if (string_val[hm.get(cls_name)].strcontent.length === 0) {
+            //     func_val.children_text(string_val[hm.get(cls_name)]);
+            // }
+            // else {
+            //     func_val.children_text(pata[hm.get(cls_name)]);
+            //     let op = document.createTextNode(pata[hm.get(cls_name)].strcontent);
+            //     // console.log(pata[hm.get(cls_name)].strcontent)
+            //     const t = `[data-render="${cls_name}"]`
+            //     let r = document.querySelector(t).textContent;
+
+            //     Fuzz_renderer.render_text(t, pata[hm.get(cls_name)].strcontent);
+            // }
 
             return func_val
         }
@@ -293,7 +320,27 @@ export const record = (conVal) => {
 }
 
 
+
+// sort of tree diff but still highly experimental api.
+export const new_rec = (htmlvaluecomponent) => {
+    // only render it with new value in here 
+    return $monitor(() => {
+        let call = htmlvaluecomponent();
+
+        console.log(call);
+
+        let selector = document.querySelector(call.className);
+
+        if (selector !== null && selector.className === call.className && call.innerHTML !== selector.innerHTML) {
+            selector.innerHTML = call.innerHTML;
+            console.log("wow", call.innerHTML);
+            // console.log("selector", selector.innerHTML);
+        }
+        return call;
+    })
+}
+
 export const Fuzz_renderer = new Render_components__methods()
 Object.freeze(Fuzz_renderer);
 
-export default { $see, $monitor, Fuzz_renderer, record, Hrouter, onMount, $Memo};
+export default { $see, $monitor, Fuzz_renderer, record, Hrouter, onMount, $Memo, new_rec };

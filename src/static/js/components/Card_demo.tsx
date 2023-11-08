@@ -47,26 +47,37 @@ function setlogic(db, e, setter) {
 
 }
 
-export const Card = () => {
-
+export const Card = (props) => {
     let [getdb, setdb] = $see(db);
 
     const updatestate = (id_state) => {
-        const newState = getdb().map(obj => {
-            // 👇️ if id equals 2, update country property
-            if (obj.added === "not added" && obj.id === id_state) {
-                return { ...obj, added: "added" };
-            }else if(obj.added === "added" && obj.id === id_state){
-                return { ...obj, added: "not added" };
-            }
+        const newgetdb = getdb();
+        const newState = newgetdb[id_state - 1];
+        // obj => {
+        //     // 👇️ if id equals 2, update country property
+        //     if (obj.added === "not added" && obj.id === id_state) {
+        //         return { ...obj, added: "added" };
+        //     }else if(obj.added === "added" && obj.id === id_state){
+        //         return { ...obj, added: "not added" };
+        //     }
 
-            // 👇️ otherwise return the object as is
-            return obj;
-        });
-
-        setdb(newState);
+        //     // 👇️ otherwise return the object as is
+        //     return obj;
+        // });
+        if (newState.added === "added") {
+            newState.added = "not added";
+            newgetdb[id_state - 1] = newState;
+        } else {
+            newState.added = "added";
+            newgetdb[id_state - 1] = newState;
+        }
+        setdb(newgetdb);
     }
 
+    // let dealer1 = props.k;
+    // let dealer2 = props.k;
+
+    console.log("Hello wold");
     // console.log(getdb())
     // setdb([...getdb()])
     return (
@@ -78,13 +89,13 @@ export const Card = () => {
                     <div class="card-body" >
                         <h5 class="card-title">{getdb()[e].title}</h5>
                         <p class="card-text">{getdb()[e].desc}</p>
-                        
+
                         {/* <a onclick = {() => e.added === "not added"?setdb([...getdb(), {added:"added"}]):setdb([...getdb(), {added:"not added"}])} class="btn btn-primary">go somewhere</a> */}
 
-                        {record(() => <p  data-render = {e.toString() + "a"}>{getdb()[e].added}</p>)}
+                        {record(() => <p data-render={e.toString() + "a" + props.k}>{getdb()[e].added}</p>)}
 
-                        <a class="btn btn-primary" onclick = {() => updatestate(getdb()[e].id)}>ho here</a>
-                    
+                        <a class="btn btn-primary" onclick={() => updatestate(getdb()[e].id)}>ho here</a>
+                        
                     </div>
                 </div>)
             }

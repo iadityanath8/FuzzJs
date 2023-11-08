@@ -9,7 +9,8 @@ export const Homeroute = Hrouter({
     "/":Home,
     "/nav":Navbar,
     "/Counter":Counter,
-    "/Shop":Card
+    // "/Shop":Card
+
 });
 
 export default Homeroute;

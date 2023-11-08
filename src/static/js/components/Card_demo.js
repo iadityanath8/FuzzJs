@@ -1,14 +1,3 @@
-var __assign = (this && this.__assign) || function () {
-    __assign = Object.assign || function(t) {
-        for (var s, i = 1, n = arguments.length; i < n; i++) {
-            s = arguments[i];
-            for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p))
-                t[p] = s[p];
-        }
-        return t;
-    };
-    return __assign.apply(this, arguments);
-};
 var __spreadArray = (this && this.__spreadArray) || function (to, from, pack) {
     if (pack || arguments.length === 2) for (var i = 0, l = from.length, ar; i < l; i++) {
         if (ar || !(i in from)) {
@@ -63,22 +52,34 @@ var db = [
 ];
 function setlogic(db, e, setter) {
 }
-export var Card = function () {
+export var Card = function (props) {
     var _a = $see(db), getdb = _a[0], setdb = _a[1];
     var updatestate = function (id_state) {
-        var newState = getdb().map(function (obj) {
-            // 👇️ if id equals 2, update country property
-            if (obj.added === "not added" && obj.id === id_state) {
-                return __assign(__assign({}, obj), { added: "added" });
-            }
-            else if (obj.added === "added" && obj.id === id_state) {
-                return __assign(__assign({}, obj), { added: "not added" });
-            }
-            // 👇️ otherwise return the object as is
-            return obj;
-        });
-        setdb(newState);
+        var newgetdb = getdb();
+        var newState = newgetdb[id_state - 1];
+        // obj => {
+        //     // 👇️ if id equals 2, update country property
+        //     if (obj.added === "not added" && obj.id === id_state) {
+        //         return { ...obj, added: "added" };
+        //     }else if(obj.added === "added" && obj.id === id_state){
+        //         return { ...obj, added: "not added" };
+        //     }
+        //     // 👇️ otherwise return the object as is
+        //     return obj;
+        // });
+        if (newState.added === "added") {
+            newState.added = "not added";
+            newgetdb[id_state - 1] = newState;
+        }
+        else {
+            newState.added = "added";
+            newgetdb[id_state - 1] = newState;
+        }
+        setdb(newgetdb);
     };
+    // let dealer1 = props.k;
+    // let dealer2 = props.k;
+    console.log("Hello wold");
     // console.log(getdb())
     // setdb([...getdb()])
     return (Fuzz.MakeElement.apply(Fuzz, __spreadArray(["div", { class: "container", style: { display: "flex", flex_direction: "row", gap: "2em", flex_wrap: "wrap" } }], range(0, 4).map(function (e) { return Fuzz.MakeElement("div", { class: "card", style: "width: 18rem;" },
@@ -86,7 +87,7 @@ export var Card = function () {
         Fuzz.MakeElement("div", { class: "card-body" },
             Fuzz.MakeElement("h5", { class: "card-title" }, getdb()[e].title),
             Fuzz.MakeElement("p", { class: "card-text" }, getdb()[e].desc),
-            record(function () { return Fuzz.MakeElement("p", { "data-render": e.toString() + "a" }, getdb()[e].added); }),
+            record(function () { return Fuzz.MakeElement("p", { "data-render": e.toString() + "a" + props.k }, getdb()[e].added); }),
             Fuzz.MakeElement("a", { class: "btn btn-primary", onclick: function () { return updatestate(getdb()[e].id); } }, "ho here"))); }), false)));
 };
 export default Card;

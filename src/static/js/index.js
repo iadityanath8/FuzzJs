@@ -28,7 +28,7 @@ var Fuzz = /** @class */ (function () {
             childrens[_i - 2] = arguments[_i];
         }
         if (typeof tag_name === 'function') {
-            console.log(childrens);
+            // console.log(childrens)
             return tag_name(props);
         }
         var element = document.createElement(tag_name);

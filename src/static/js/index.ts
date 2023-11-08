@@ -21,7 +21,7 @@ export class Fuzz {
     public static MakeElement(tag_name, props: object, ...childrens: any[]) {
 
         if (typeof tag_name === 'function') {
-            console.log(childrens)
+            // console.log(childrens)
             return tag_name(props);
         }
 
